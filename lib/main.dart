@@ -4,6 +4,7 @@ import 'package:weather/app.dart';
 import 'package:weather/bloc/weather_bloc.dart';
 
 void main() {
+  // запускаем приложение, создаем WeatherBloc и передаем его дереву виджетов
   runApp(BlocProvider(
     create: (context) => WeatherBloc(),
     child: const WeatherApp(),

@@ -1,13 +1,15 @@
-import 'dart:convert';
-
 import 'package:weather/models/location.dart';
 import 'package:weather/models/weather.dart';
 import 'package:dio/dio.dart';
 
+/// класс-сервис для получения данных о погоде из api
 class WeatherService {
   static const String _apiKey = '27b98e589c3adfcfb4caa7a09ec94175';
 
+  /// принимает город [city] и возвращает объект
+  /// [Location] с его координатами или ошибку получения локации
   static Future<Location> getLocation(String city) async {
+    /// url для получения локации
     var geocodingUrl =
         'http://api.openweathermap.org/geo/1.0/direct?q=$city&appid=$_apiKey';
     var response = await Dio().get(geocodingUrl);
@@ -22,11 +24,15 @@ class WeatherService {
     }
   }
 
+  /// принимает город [city] и возвращает список с тремя объектами
+  /// [Weather], содержащими информацию о погоде в указанном городе, или
+  /// ошибку получения данных о погоде
   static Future<List<Weather>> getWeather(String city) async {
     Location location = await getLocation(city);
     double lat = location.lat;
     double lon = location.lon;
 
+    /// url для получениия погоды
     var weatherUrl =
         'http://api.openweathermap.org/data/2.5/forecast?units=metric&lat=$lat&lon=$lon&appid=$_apiKey';
 

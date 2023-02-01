@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
+/// Создает пустое пространство.
+///
+/// Используется для визуального отделения виджетов друг от друга.
+/// Опционально принимает высоту [height] и ширину [width]
 class Gap extends StatelessWidget {
-  double width;
-  double height;
+  final double width;
+  final double height;
 
-  Gap({this.width = 10, this.height = 10, super.key});
+  const Gap({this.width = 10, this.height = 10, super.key});
 
   @override
   Widget build(BuildContext context) {

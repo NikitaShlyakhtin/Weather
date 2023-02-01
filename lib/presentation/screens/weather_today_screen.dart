@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/bloc/weather_bloc.dart';
 import 'package:weather/models/weather.dart';
-import 'package:weather/presentation/screens/three_day_weather_screen.dart';
+import 'package:weather/presentation/screens/weather_forecast_screen.dart';
 import 'package:weather/presentation/constants/text_styles.dart';
 import 'package:weather/presentation/widgets/gap.dart';
 
+/// Экран с погодой на данный момент.
+///
+/// Отображает иконку погоды, имя города, температуру, влажность
+/// и скорость ветра
 class WeatherTodayScreen extends StatelessWidget {
   const WeatherTodayScreen({super.key});
 
@@ -23,11 +27,13 @@ class WeatherTodayScreen extends StatelessWidget {
     );
   }
 
+  /// Открывает экран с прогнозом погоды, если состояние [WeatherForecast].
+  /// Возвращается на начальный экран, если состояние [WeatherInitial].
   void _weatherListener(BuildContext context, WeatherState state) {
     if (state is WeatherForecast) {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => const ThreeDayWeatherScreen(),
+          builder: (context) => const WeatherForecastScreen(),
         ),
       );
     } else if (state is WeatherInitial) {
@@ -35,10 +41,13 @@ class WeatherTodayScreen extends StatelessWidget {
     }
   }
 
+  /// Вызывает перестройку только если состояние [WeatherToday].
   bool _buildWhenHandler(previousState, state) {
     return state is WeatherToday;
   }
 
+  /// Возвращает [WeatherTodayColumn] если состояние [WeatherToday].
+  /// В противном случае возвращает виджет с ошибкой.
   Widget _buildScaffold(BuildContext context, WeatherState state) {
     if (state is WeatherToday) {
       return WeatherTodayColumn(state: state);
@@ -48,6 +57,8 @@ class WeatherTodayScreen extends StatelessWidget {
   }
 }
 
+/// Строит [AppBar] с иконками "назад" для возвращения на начальный экран
+/// и "вперед" для перехода к экрану с погодой на три дня.
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   const MyAppBar({super.key});
 
@@ -78,6 +89,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
     );
   }
 
+  /// Вызывает событие [WeatherSearchOpened] при нажатии на кнопку
   void _buttonHandler(BuildContext context, WeatherState state) {
     context.read<WeatherBloc>().add(WeatherSearchOpened());
   }
@@ -86,6 +98,9 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
+/// Строит колонну с информацией о погоде на данный момент.
+///
+/// Принимает [state] с List<Weather>
 class WeatherTodayColumn extends StatelessWidget {
   final WeatherToday state;
   const WeatherTodayColumn({required this.state, super.key});
@@ -104,26 +119,30 @@ class WeatherTodayColumn extends StatelessWidget {
             errorBuilder: _errorBuilder,
           ),
           Text(today.cityName, style: labelText),
-          Gap(),
+          const Gap(),
           InfoRow(
               icon: const Icon(Icons.thermostat),
               text: "${today.temperature}°C"),
-          Gap(),
+          const Gap(),
           InfoRow(
               icon: const Icon(Icons.water_drop), text: "${today.humidity}%"),
-          Gap(),
+          const Gap(),
           InfoRow(icon: const Icon(Icons.air), text: "${today.windSpeed} м/с"),
         ],
       ),
     );
   }
 
+  /// Строит текст с пустой строкой если Image.network возвращает ошибку
   Widget _errorBuilder(
       BuildContext context, Object exception, StackTrace? stackTrace) {
     return const Text('');
   }
 }
 
+/// Строит строку с иконкой и строкой.
+///
+/// Принимает иконку [icon] и текст [text]
 class InfoRow extends StatelessWidget {
   final Icon icon;
   final String text;
@@ -137,7 +156,7 @@ class InfoRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           icon,
-          Gap(),
+          const Gap(),
           Text(text, style: bodyText),
         ],
       ),
@@ -145,6 +164,7 @@ class InfoRow extends StatelessWidget {
   }
 }
 
+/// Строит виджет с информацией об ошибке.
 class CenterErrorMessage extends StatelessWidget {
   const CenterErrorMessage({super.key});
 

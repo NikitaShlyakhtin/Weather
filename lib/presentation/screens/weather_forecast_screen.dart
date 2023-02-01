@@ -5,8 +5,9 @@ import 'package:weather/models/weather.dart';
 import 'package:weather/presentation/constants/text_styles.dart';
 import 'package:weather/presentation/widgets/gap.dart';
 
-class ThreeDayWeatherScreen extends StatelessWidget {
-  const ThreeDayWeatherScreen({super.key});
+/// Строит экран с прогнозом погоды на три дня.
+class WeatherForecastScreen extends StatelessWidget {
+  const WeatherForecastScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +22,24 @@ class ThreeDayWeatherScreen extends StatelessWidget {
     );
   }
 
+  /// Возвращает к предыдущему экрану при смене состояния на
+  /// [WeatherToday]
   void _weatherListener(BuildContext context, WeatherState state) {
     if (state is WeatherToday) {
       Navigator.pop(context);
     }
   }
 
+  /// Строит экран
   Widget _buildScaffold(WeatherState state) {
     return Column(
       children: _weatherForecast(state),
     );
   }
 
+  /// Возвращает список из трех рядов с информацией о погоде.
+  ///
+  /// Принимает [state] с данными.
   List<Widget> _weatherForecast(WeatherState state) {
     if (state is WeatherForecast) {
       return [
@@ -48,6 +55,7 @@ class ThreeDayWeatherScreen extends StatelessWidget {
     return [];
   }
 
+  /// Возвращает ряд с информацией о погоде в один из дней.
   Widget weatherRow(Weather weather) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -64,7 +72,7 @@ class ThreeDayWeatherScreen extends StatelessWidget {
               weather.smallIconUrl,
               errorBuilder: _errorBuilder,
             ),
-            Gap(),
+            const Gap(),
             Text(
               '${weather.temperature}°',
               style: bodyText,
@@ -75,16 +83,20 @@ class ThreeDayWeatherScreen extends StatelessWidget {
     );
   }
 
+  /// Строит текст с пустой строкой если Image.network возвращает ошибку
   Widget _errorBuilder(
       BuildContext context, Object exception, StackTrace? stackTrace) {
     return const Text('');
   }
 }
 
+/// Строит [AppBar] с иконкой "назад" для возвращения на экран с погодой на
+/// данный момент.
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   final WeatherState state;
   const MyAppBar(this.state, {super.key});
 
+  /// Возвращает название города для [title].
   String get text {
     if (state is WeatherForecast) {
       return (state as WeatherForecast).weatherList[0].cityName;
@@ -107,6 +119,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
         ));
   }
 
+  /// Вызывает событие [WeatherTodayOpened] при нажатии на кнопку "назад".
   void _buttonHandler(BuildContext context, WeatherState state) {
     if (state is WeatherForecast) {
       context

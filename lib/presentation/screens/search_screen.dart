@@ -6,6 +6,9 @@ import 'package:weather/presentation/constants/decorations.dart';
 import 'package:weather/presentation/constants/text_styles.dart';
 import 'package:weather/presentation/widgets/gap.dart';
 
+/// Исходный экран.
+///
+/// Отображает строку ввода города.
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
@@ -20,6 +23,7 @@ class SearchScreen extends StatelessWidget {
   }
 }
 
+/// Горизонтальный ряд с [TextField] для ввода города и кнопкой поиска.
 class InputRow extends StatelessWidget {
   InputRow({super.key});
 
@@ -34,11 +38,15 @@ class InputRow extends StatelessWidget {
     );
   }
 
+  /// Отслеживает изменение состояния только когда пользователь находится
+  /// на начальном экране.
   bool _listenWhenHandler(previousState, state) {
     return previousState is WeatherInitial ||
         previousState is WeatherFetchingFailure;
   }
 
+  /// Открывает экран [WeatherTodayScreen] если данные о погоде
+  /// получены успешно. В противном случае показыает [SnackBar] с ошибкой.
   void _weatherListener(BuildContext context, WeatherState state) {
     if (state is WeatherToday) {
       Navigator.of(context).push(
@@ -51,6 +59,7 @@ class InputRow extends StatelessWidget {
     }
   }
 
+  /// Строит ряд с [TextField] и кнопкой поиска
   Widget _inputBuilder(BuildContext context, WeatherState state) {
     return Container(
       width: double.infinity,
@@ -63,7 +72,7 @@ class InputRow extends StatelessWidget {
               decoration: inputDecoration,
             ),
           ),
-          Gap(),
+          const Gap(),
           IconButton(
               onPressed: () {
                 if (myController.text.isNotEmpty) {
@@ -81,6 +90,7 @@ class InputRow extends StatelessWidget {
     );
   }
 
+  /// Показывает [SnackBar] с ошибкой.
   void showSnackBar(BuildContext context) {
     final snackBar = SnackBar(
       duration: const Duration(minutes: 5),

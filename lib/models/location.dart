@@ -1,6 +1,6 @@
-import 'package:json_annotation/json_annotation.dart';
-
-@JsonSerializable()
+/// Класс для хранения информации о геолокации города.
+///
+/// Принимает широту [lat] и долготу [lon]
 class Location {
   final double lat;
   final double lon;

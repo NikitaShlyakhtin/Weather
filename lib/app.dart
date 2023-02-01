@@ -7,6 +7,8 @@ class WeatherApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(useMaterial3: true), home: const SearchScreen());
+        theme: ThemeData(useMaterial3: true), // включаем material 3
+        home: const SearchScreen() // открываем экран поиска города
+        );
   }
 }
